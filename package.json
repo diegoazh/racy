@@ -1,16 +1,22 @@
 {
-  "name": "racy",
+  "name": "root",
+  "private": true,
   "version": "1.0.0",
-  "description": "a simple package inspired on NestJs for serverless architectures",
+  "description": "racy library is a group of packages to work with serverless framework in different clouds",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "postinstall": "lerna bootstrap",
+    "prepare": "husky install",
+    "clean": "lerna run clean && rimraf ./**/**/node_modules && rimraf ./node_modules"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/diegoazh/racy.git"
   },
   "keywords": [
+    "racy",
     "serverless",
     "aws",
     "azure"
@@ -21,7 +27,12 @@
     "url": "https://github.com/diegoazh/racy/issues"
   },
   "homepage": "https://github.com/diegoazh/racy#readme",
-  "dependencies": {
+  "devDependencies": {
+    "@commitlint/cli": "^13.2.0",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@commitlint/config-lerna-scopes": "^13.2.0",
+    "husky": "^7.0.2",
+    "jest": "^27.2.4",
     "lerna": "^4.0.0"
   }
 }
