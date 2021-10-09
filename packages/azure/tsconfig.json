@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "types": ["reflect-metadata", "node", "jest"]
+  },
+  "include": [
+    "webpack.config.js",
+    "src/**/*",
+    "tests/**/*",
+    "config/*.js",
+    "jest.config.ts",
+  ],
+}
