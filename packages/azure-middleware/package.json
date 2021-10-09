@@ -8,7 +8,8 @@
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "lint": "prettier src --write && eslint \"src/**/*.{ts,js}\" --fix",
-    "build": "tsc --project tsconfig.build.json"
+    "build": "npm run clean:build && tsc --project tsconfig.build.json",
+    "publish": "npm run build && cp package.json ./dist && cp package-lock.json ./dist && cd ./dist && npm publish"
   },
   "keywords": [
     "serverless",
