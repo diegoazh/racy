@@ -9,7 +9,7 @@
     "lint": "lerna run lint",
     "postinstall": "lerna bootstrap",
     "prepare": "husky install",
-    "clean": "lerna run clean && rimraf ./**/**/node_modules && rimraf ./node_modules"
+    "clean": "npx lerna run clean && rimraf ./**/**/package-lock.json && rimraf ./**/**/node_modules && rimraf ./node_modules && rimraf ./package-lock.json"
   },
   "repository": {
     "type": "git",
