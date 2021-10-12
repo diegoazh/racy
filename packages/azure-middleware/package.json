@@ -10,7 +10,7 @@
     "test:watch": "jest --coverage --watch",
     "lint": "prettier src --write && eslint \"src/**/*.{ts,js}\" --fix",
     "build": "npm run clean:build && tsc --project tsconfig.build.json",
-    "release": "npm run build && cp package.json ./dist && cp README.md ./dist && cp LICENSE.md ./dist && cp .npmignore ./dist"
+    "release": "npm run build && cp package.json ./dist && cp README.md ./dist && cp LICENSE.md ./dist && cp .npmignore ./dist && cd ./dist && npm publish --access public && cd .."
   },
   "keywords": [
     "serverless",
