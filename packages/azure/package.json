@@ -22,7 +22,10 @@
   "author": "Diego A. Zapata Häntsch",
   "license": "MIT",
   "dependencies": {
+    "@types/azure-function-log-intercept": "^1.0.0",
+    "@racy/azure-middleware": "^1.1.2",
     "@azure/functions": "^1.2.3",
+    "@serverless/typescript": "^2.59.0",
     "@types/config": "^0.0.39",
     "@types/node": "^16.9.2",
     "@types/qs": "^6.9.7",
@@ -38,13 +41,12 @@
     "lodash": "^4.17.21",
     "qs": "^6.10.1",
     "reflect-metadata": "^0.1.13",
+    "typescript": "^4.4.3",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@jest/types": "^27.1.1",
-    "@serverless/typescript": "^2.59.0",
-    "@types/azure-function-log-intercept": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "copy-webpack-plugin": "^9.0.1",
@@ -68,7 +70,6 @@
     "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.3",
     "webpack": "^5.53.0",
     "webpack-node-externals": "^3.0.0"
   }
