@@ -2,14 +2,17 @@
   "name": "@racy/azure-middleware",
   "version": "1.1.0",
   "description": "racy implementation for azure middleware inspired on Middy",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean:build": "rimraf dist",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "lint": "prettier src --write && eslint \"src/**/*.{ts,js}\" --fix",
     "build": "npm run clean:build && tsc --project tsconfig.build.json",
-    "release": "npm run build && cp package.json ./dist && cp package-lock.json ./dist && cd ./dist && npm publish --access public && cd .."
+    "release": "npm run build && cp package.json ./dist && cd ./dist && npm publish --access public && cd .."
   },
   "keywords": [
     "serverless",
