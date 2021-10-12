@@ -1,88 +1,288 @@
 import { Context, HttpRequest } from '@azure/functions';
-import { AppMetadataKeys } from '@shared/constants/app-metadata-keys.constant';
-import { HttpStatus } from '@shared/constants/http-status.constant';
-import { HttpVerb } from '@shared/constants/http-verb.constant';
-import { AppException } from '@shared/exceptions/app.exception';
+import azureFnLogIntercept from 'azure-function-log-intercept';
+import { AppMetadataKeys, HttpStatus, HttpVerb } from 'src/constants';
+import { AppException } from 'src/exceptions';
+import { IAppResponse } from 'src/interfaces/app-responses.interface';
 import {
   IControllerMetadata,
   IControllerMethodMetadata,
   IControllerParamMetadata,
   IParameterData,
   IParamMethodDefinition,
-} from '@shared/interfaces/metadata.interface';
-import { IHandlersMetadata } from '@shared/interfaces/module-decorator-options.interface';
-import { ConfigService } from '@shared/services/config.service';
-import { LoggerService } from '@shared/services/logger.service';
-import { ResponseManagerService } from '@shared/services/response-manager.service';
-import { UtilService } from '@shared/services/util.service';
-import { ValidatorService } from '@shared/services/validator.service';
-import { SharedModule } from '@shared/shared.module';
-import azureFnLogIntercept from 'azure-function-log-intercept';
-import { Container } from 'inversify';
+} from 'src/interfaces/metadata.interface';
+import { IHandlersMetadata } from 'src/interfaces/module-decorator-options.interface';
+import {
+  ConfigService,
+  LoggerService,
+  ResponseManagerService,
+  UtilService,
+  ValidatorService,
+} from 'src/services';
+import { AuthenticatedRequest } from 'src/types/util.type';
 
-export function Get(route?: string, handlerName?: string): MethodDecorator {
-  return function httpGetDecorator<T>(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>,
-  ): void | TypedPropertyDescriptor<T> {
-    defineHttpVerb(target, propertyKey, HttpVerb.GET);
-    addHandlerDefinition(target, propertyKey, handlerName);
-    addLogInformation(target, propertyKey, route);
-    methodImplementation(target, propertyKey, descriptor);
-  };
+/**
+ * This function helps you to define the decorated function as a GET HTTP Verb
+ * You can specify the route by default it should be defined as /
+ * You can name the handler with a different name by default it use the function name
+ *
+ * @param  {string} route?
+ * @param  {string} handlerName?
+ * @returns MethodDecorator
+ */
+export function Get(route?: string, handlerName?: string): MethodDecorator;
+/**
+ * This function helps you to define the decorated function as a GET HTTP Verb
+ * By default the route should be defined as /
+ * By default the handler name should be equal to the function name
+ *
+ * @param  {Object} target
+ * @param  {string|symbol} propertyKey
+ * @param  {TypedPropertyDescriptor<T>} descriptor
+ * @returns void
+ */
+export function Get<T>(
+  target: Object,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+): void | TypedPropertyDescriptor<T>;
+export function Get<T>(
+  ...args: any[]
+): MethodDecorator | void | TypedPropertyDescriptor<T> {
+  if (args.length < 3) {
+    const [route, handlerName] = args;
+
+    return function httpGetDecorator<U>(
+      target: Object,
+      propertyKey: string | symbol,
+      descriptor: TypedPropertyDescriptor<U>,
+    ): void | TypedPropertyDescriptor<U> {
+      defineHttpVerb(target, propertyKey, HttpVerb.GET);
+      addHandlerDefinition(target, propertyKey, handlerName);
+      addLogInformation(target, propertyKey, route);
+      methodImplementation(target, propertyKey, descriptor);
+    };
+  }
+
+  const route = undefined;
+  const handlerName = undefined;
+  const [target, propertyKey, descriptor] = args;
+
+  defineHttpVerb(target, propertyKey, HttpVerb.GET);
+  addHandlerDefinition(target, propertyKey, handlerName);
+  addLogInformation(target, propertyKey, route);
+  methodImplementation(target, propertyKey, descriptor);
 }
 
-export function Post(route?: string, handlerName?: string): MethodDecorator {
-  return function httpGetDecorator<T>(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>,
-  ): void | TypedPropertyDescriptor<T> {
-    defineHttpVerb(target, propertyKey, HttpVerb.POST);
-    addHandlerDefinition(target, propertyKey, handlerName);
-    addLogInformation(target, propertyKey, route);
-    methodImplementation(target, propertyKey, descriptor);
-  };
+/**
+ * This function helps you to define the decorated function as a POST HTTP Verb
+ * You can specify the route by default it should be defined as /
+ * You can name the handler with a different name by default it use the function name
+ *
+ * @param  {string} route?
+ * @param  {string} handlerName?
+ * @returns MethodDecorator
+ */
+export function Post(route?: string, handlerName?: string): MethodDecorator;
+/**
+ * This function helps you to define the decorated function as a POST HTTP Verb
+ * By default the route should be defined as /
+ * By default the handler name should be equal to the function name
+ *
+ * @param  {Object} target
+ * @param  {string|symbol} propertyKey
+ * @param  {TypedPropertyDescriptor<T>} descriptor
+ * @returns void
+ */
+export function Post<T>(
+  target: Object,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+): void | TypedPropertyDescriptor<T>;
+export function Post<T>(
+  ...args: any[]
+): MethodDecorator | void | TypedPropertyDescriptor<T> {
+  if (args.length < 3) {
+    const [route, handlerName] = args;
+
+    return function httpPostDecorator<U>(
+      target: Object,
+      propertyKey: string | symbol,
+      descriptor: TypedPropertyDescriptor<U>,
+    ): void | TypedPropertyDescriptor<U> {
+      defineHttpVerb(target, propertyKey, HttpVerb.POST);
+      addHandlerDefinition(target, propertyKey, handlerName);
+      addLogInformation(target, propertyKey, route);
+      methodImplementation(target, propertyKey, descriptor);
+    };
+  }
+
+  const route = undefined;
+  const handlerName = undefined;
+  const [target, propertyKey, descriptor] = args;
+
+  defineHttpVerb(target, propertyKey, HttpVerb.POST);
+  addHandlerDefinition(target, propertyKey, handlerName);
+  addLogInformation(target, propertyKey, route);
+  methodImplementation(target, propertyKey, descriptor);
 }
 
-export function Put(route?: string, handlerName?: string): MethodDecorator {
-  return function httpGetDecorator<T>(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>,
-  ): void | TypedPropertyDescriptor<T> {
-    defineHttpVerb(target, propertyKey, HttpVerb.PUT);
-    addHandlerDefinition(target, propertyKey, handlerName);
-    addLogInformation(target, propertyKey, route);
-    methodImplementation(target, propertyKey, descriptor);
-  };
+/**
+ * This function helps you to define the decorated function as a Put HTTP Verb
+ * You can specify the route by default it should be defined as /
+ * You can name the handler with a different name by default it use the function name
+ *
+ * @param  {string} route?
+ * @param  {string} handlerName?
+ * @returns MethodDecorator
+ */
+export function Put(route?: string, handlerName?: string): MethodDecorator;
+/**
+ * This function helps you to define the decorated function as a Put HTTP Verb
+ * By default the route should be defined as /
+ * By default the handler name should be equal to the function name
+ *
+ * @param  {Object} target
+ * @param  {string|symbol} propertyKey
+ * @param  {TypedPropertyDescriptor<T>} descriptor
+ * @returns void
+ */
+export function Put<T>(
+  target: Object,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+): void | TypedPropertyDescriptor<T>;
+export function Put<T>(
+  ...args: any[]
+): MethodDecorator | void | TypedPropertyDescriptor<T> {
+  if (args.length < 3) {
+    const [route, handlerName] = args;
+
+    return function httpPutDecorator<U>(
+      target: Object,
+      propertyKey: string | symbol,
+      descriptor: TypedPropertyDescriptor<U>,
+    ): void | TypedPropertyDescriptor<U> {
+      defineHttpVerb(target, propertyKey, HttpVerb.PUT);
+      addHandlerDefinition(target, propertyKey, handlerName);
+      addLogInformation(target, propertyKey, route);
+      methodImplementation(target, propertyKey, descriptor);
+    };
+  }
+
+  const route = undefined;
+  const handlerName = undefined;
+  const [target, propertyKey, descriptor] = args;
+
+  defineHttpVerb(target, propertyKey, HttpVerb.PUT);
+  addHandlerDefinition(target, propertyKey, handlerName);
+  addLogInformation(target, propertyKey, route);
+  methodImplementation(target, propertyKey, descriptor);
 }
 
-export function Patch(route?: string, handlerName?: string): MethodDecorator {
-  return function httpGetDecorator<T>(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>,
-  ): void | TypedPropertyDescriptor<T> {
-    defineHttpVerb(target, propertyKey, HttpVerb.PATCH);
-    addHandlerDefinition(target, propertyKey, handlerName);
-    addLogInformation(target, propertyKey, route);
-    methodImplementation(target, propertyKey, descriptor);
-  };
+/**
+ * This function helps you to define the decorated function as a Patch HTTP Verb
+ * You can specify the route by default it should be defined as /
+ * You can name the handler with a different name by default it use the function name
+ *
+ * @param  {string} route?
+ * @param  {string} handlerName?
+ * @returns MethodDecorator
+ */
+export function Patch(route?: string, handlerName?: string): MethodDecorator;
+/**
+ * This function helps you to define the decorated function as a Patch HTTP Verb
+ * By default the route should be defined as /
+ * By default the handler name should be equal to the function name
+ *
+ * @param  {Object} target
+ * @param  {string|symbol} propertyKey
+ * @param  {TypedPropertyDescriptor<T>} descriptor
+ * @returns void
+ */
+export function Patch<T>(
+  target: Object,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+): void | TypedPropertyDescriptor<T>;
+export function Patch<T>(
+  ...args: any[]
+): MethodDecorator | void | TypedPropertyDescriptor<T> {
+  if (args.length < 3) {
+    const [route, handlerName] = args;
+
+    return function httpPatchDecorator<U>(
+      target: Object,
+      propertyKey: string | symbol,
+      descriptor: TypedPropertyDescriptor<U>,
+    ): void | TypedPropertyDescriptor<U> {
+      defineHttpVerb(target, propertyKey, HttpVerb.PATCH);
+      addHandlerDefinition(target, propertyKey, handlerName);
+      addLogInformation(target, propertyKey, route);
+      methodImplementation(target, propertyKey, descriptor);
+    };
+  }
+
+  const route = undefined;
+  const handlerName = undefined;
+  const [target, propertyKey, descriptor] = args;
+
+  defineHttpVerb(target, propertyKey, HttpVerb.PATCH);
+  addHandlerDefinition(target, propertyKey, handlerName);
+  addLogInformation(target, propertyKey, route);
+  methodImplementation(target, propertyKey, descriptor);
 }
 
-export function Delete(route?: string, handlerName?: string): MethodDecorator {
-  return function httpGetDecorator<T>(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<T>,
-  ): void | TypedPropertyDescriptor<T> {
-    defineHttpVerb(target, propertyKey, HttpVerb.DELETE);
-    addHandlerDefinition(target, propertyKey, handlerName);
-    addLogInformation(target, propertyKey, route);
-    methodImplementation(target, propertyKey, descriptor);
-  };
+/**
+ * This function helps you to define the decorated function as a Delete HTTP Verb
+ * You can specify the route by default it should be defined as /
+ * You can name the handler with a different name by default it use the function name
+ *
+ * @param  {string} route?
+ * @param  {string} handlerName?
+ * @returns MethodDecorator
+ */
+export function Delete(route?: string, handlerName?: string): MethodDecorator;
+/**
+ * This function helps you to define the decorated function as a Delete HTTP Verb
+ * By default the route should be defined as /
+ * By default the handler name should be equal to the function name
+ *
+ * @param  {Object} target
+ * @param  {string|symbol} propertyKey
+ * @param  {TypedPropertyDescriptor<T>} descriptor
+ * @returns void
+ */
+export function Delete<T>(
+  target: Object,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+): void | TypedPropertyDescriptor<T>;
+export function Delete<T>(
+  ...args: any[]
+): MethodDecorator | void | TypedPropertyDescriptor<T> {
+  if (args.length < 3) {
+    const [route, handlerName] = args;
+
+    return function httpDeleteDecorator<U>(
+      target: Object,
+      propertyKey: string | symbol,
+      descriptor: TypedPropertyDescriptor<U>,
+    ): void | TypedPropertyDescriptor<U> {
+      defineHttpVerb(target, propertyKey, HttpVerb.DELETE);
+      addHandlerDefinition(target, propertyKey, handlerName);
+      addLogInformation(target, propertyKey, route);
+      methodImplementation(target, propertyKey, descriptor);
+    };
+  }
+
+  const route = undefined;
+  const handlerName = undefined;
+  const [target, propertyKey, descriptor] = args;
+
+  defineHttpVerb(target, propertyKey, HttpVerb.DELETE);
+  addHandlerDefinition(target, propertyKey, handlerName);
+  addLogInformation(target, propertyKey, route);
+  methodImplementation(target, propertyKey, descriptor);
 }
 
 /**
@@ -202,78 +402,74 @@ function methodImplementation<T>(
   descriptor: TypedPropertyDescriptor<T>,
 ): void {
   const original = descriptor.value as unknown as Function;
-  const sharedContainerModule: Container | undefined =
-    Reflect.getMetadata(AppMetadataKeys.CONTAINER_MODULE, SharedModule) ||
-    undefined;
+  const logger = new LoggerService(target.constructor.name);
+  const responseManagerService = new ResponseManagerService();
+  const utilService = new UtilService();
 
-  if (sharedContainerModule) {
-    const LoggerSvc = sharedContainerModule.get(LoggerService);
-    const logger = new (LoggerSvc as any)(target.constructor.name);
-    const responseManagerService = sharedContainerModule.get(
-      ResponseManagerService,
-    );
-    const utilService = sharedContainerModule.get(UtilService);
+  (descriptor as any).value = async function (
+    context: Context,
+    req: AuthenticatedRequest,
+  ): Promise<IAppResponse<any>> {
+    try {
+      azureFnLogIntercept(context);
+      const controllerMetadata: IControllerMetadata | undefined =
+        Reflect.getMetadata(AppMetadataKeys.CONTROLLER_METADATA, target) ||
+        undefined;
 
-    (descriptor as any).value = async function (
-      context: Context,
-      req: HttpRequest,
-    ): Promise<void> {
-      try {
-        azureFnLogIntercept(context);
-        const controllerMetadata: IControllerMetadata | undefined =
-          Reflect.getMetadata(AppMetadataKeys.CONTROLLER_METADATA, target) ||
-          undefined;
-
-        const controllerMethodMetadata: IControllerMethodMetadata | undefined =
-          Reflect.getMetadata(
-            AppMetadataKeys.CONTROLLER_METHOD_METADATA,
-            target,
-            propertyKey,
-          ) || undefined;
-
-        const paramData: IControllerParamMetadata = Reflect.getMetadata(
-          AppMetadataKeys.CONTROLLER_PARAM,
+      const controllerMethodMetadata: IControllerMethodMetadata | undefined =
+        Reflect.getMetadata(
+          AppMetadataKeys.CONTROLLER_METHOD_METADATA,
           target,
           propertyKey,
-        );
+        ) || undefined;
 
-        mainGlobalDebug(
-          controllerMetadata,
-          controllerMethodMetadata,
-          target.constructor.name,
+      const paramData: IControllerParamMetadata = Reflect.getMetadata(
+        AppMetadataKeys.CONTROLLER_PARAM,
+        target,
+        propertyKey,
+      );
+
+      mainGlobalDebug(
+        controllerMetadata,
+        controllerMethodMetadata,
+        target.constructor.name,
+        req,
+        logger,
+      );
+
+      let params;
+
+      if (paramData && Object.keys(paramData).length) {
+        params = buildParamsForControllerMethods(
+          paramData[propertyKey as any],
           req,
           logger,
         );
-
-        let params;
-
-        if (paramData && Object.keys(paramData).length) {
-          params = buildParamsForControllerMethods(
-            paramData[propertyKey as any],
-            req,
-            logger,
-          );
-        }
-
-        const result = await original.apply(this, params);
-
-        context.res = responseManagerService.sendData(
-          result,
-          controllerMethodMetadata?.httpStatus,
-        );
-
-        mainGlobalDebug(controllerMethodMetadata, result, logger);
-      } catch (error) {
-        globalErrorHandling({
-          error,
-          context,
-          logger,
-          utilService,
-          responseManagerService,
-        });
       }
-    };
-  }
+
+      const result = await original.apply(this, params);
+      const response = responseManagerService.sendData(
+        result,
+        controllerMethodMetadata?.httpStatus,
+      );
+
+      context.res = response;
+
+      mainGlobalDebug(controllerMethodMetadata, result, logger);
+
+      return response;
+    } catch (error) {
+      globalErrorHandling({
+        error,
+        context,
+        logger,
+        utilService,
+        responseManagerService,
+      });
+
+      throw error;
+    }
+  };
 }
 
 /**
@@ -372,13 +568,8 @@ function mainGlobalDebug(
     | any
   )[]
 ): void {
-  const sharedContainerModule: Container | undefined = Reflect.getMetadata(
-    AppMetadataKeys.CONTAINER_MODULE,
-    SharedModule,
-  );
-
-  const utilService = sharedContainerModule?.get(UtilService);
-  const configService = sharedContainerModule?.get(ConfigService);
+  const utilService = new UtilService();
+  const configService = new ConfigService();
   const appDebug = configService?.get<boolean>('app.debug');
 
   if (params.length === 5) {
@@ -445,15 +636,11 @@ function mainGlobalDebug(
  */
 function buildParamsForControllerMethods(
   paramDefinition: IParamMethodDefinition,
-  req: HttpRequest,
+  req: AuthenticatedRequest,
   logger: InstanceType<typeof LoggerService>,
 ): any[] {
-  const sharedContainerModule: Container | undefined = Reflect.getMetadata(
-    AppMetadataKeys.CONTAINER_MODULE,
-    SharedModule,
-  );
-  const validatorService = sharedContainerModule?.get(ValidatorService);
-  const utilService = sharedContainerModule?.get(UtilService);
+  const validatorService = new ValidatorService();
+  const utilService = new UtilService();
   const params: any[] = [];
 
   Object.values(paramDefinition).forEach((value: IParameterData) => {

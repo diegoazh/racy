@@ -1,4 +1,5 @@
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
+import { AppMetadataKeys } from '../constants/metadata-keys.constant';
+import { RequestKey } from '../constants/request-key.constant';
 import {
   IControllerParamMetadata,
   IParameterData,
@@ -74,18 +75,27 @@ export function Url(keys?: string | string[]): ParameterDecorator {
   };
 }
 
+export function LoggedUser(keys?: string | string[]): ParameterDecorator {
+  return function loggedUserDecorator(
+    target: Object,
+    propertyKey: string | symbol,
+    parameterIndex: number,
+  ): void {
+    saveParameterMetadata(
+      target,
+      propertyKey,
+      parameterIndex,
+      RequestKey.loggedUser,
+      keys,
+    );
+  };
+}
+
 function saveParameterMetadata(
   target: Object,
   propertyKey: string | symbol,
   parameterIndex: number,
-  reqKey:
-    | 'body'
-    | 'headers'
-    | 'method'
-    | 'params'
-    | 'query'
-    | 'rawBody'
-    | 'url',
+  reqKey: typeof RequestKey[keyof typeof RequestKey],
   keys?: string | string[],
 ): void {
   const paramTypes: Function[] =

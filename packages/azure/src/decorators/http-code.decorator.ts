@@ -1,5 +1,5 @@
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
-import { HttpStatus } from '../constants/http-status.constant';
+import { AppMetadataKeys, HttpStatus } from 'src/constants';
+import { IControllerMethodMetadata } from 'src/interfaces/metadata.interface';
 
 export function HttpCode(
   httpStatus: typeof HttpStatus[keyof typeof HttpStatus],
@@ -9,7 +9,7 @@ export function HttpCode(
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>, // eslint-disable-line @typescript-eslint/no-unused-vars -- temporary
   ): void | TypedPropertyDescriptor<T> {
-    const controllerMethodMetadata: Record<string, any> =
+    const controllerMethodMetadata: IControllerMethodMetadata =
       Reflect.getMetadata(
         AppMetadataKeys.CONTROLLER_METHOD_METADATA,
         target,

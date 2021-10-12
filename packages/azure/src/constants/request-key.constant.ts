@@ -6,4 +6,5 @@ export const RequestKey = {
   query: 'query',
   url: 'url',
   rawBody: 'rawBody',
+  loggedUser: 'loggedUser',
 } as const;

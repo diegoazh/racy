@@ -1,7 +1,8 @@
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
+import { AppMetadataKeys } from '../constants/metadata-keys.constant';
+import { MiddlewareFnBuilder } from '../types/azure-middleware.type'; // TODO: should be @racy/azure-middleware
 
 export function Middleware(
-  middleware: Function | Function[],
+  middleware: MiddlewareFnBuilder | MiddlewareFnBuilder[],
 ): MethodDecorator & ClassDecorator {
   return function middlewareDecorator(
     target: any,

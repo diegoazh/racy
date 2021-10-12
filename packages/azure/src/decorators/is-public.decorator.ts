@@ -1,4 +1,4 @@
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
+import { AppMetadataKeys } from '../constants/metadata-keys.constant';
 import {
   IControllerMetadata,
   IControllerMethodMetadata,

@@ -1,5 +1,9 @@
 import { injectable } from 'inversify';
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
+import { AppMetadataKeys } from 'src/constants';
+import {
+  IControllerMetadata,
+  ISingleControllerMetadata,
+} from 'src/interfaces/metadata.interface';
 
 /**
  * Controller decorator factory
@@ -13,18 +17,24 @@ export function Controller(baseRoute: string): ClassDecorator {
   return function controllerDecorator<TFunction extends Function>(
     target: TFunction,
   ): void | TFunction {
-    const controllerMetadata: Record<string, any> =
+    const controllerMetadata: IControllerMetadata =
       Reflect.getMetadata(
         AppMetadataKeys.CONTROLLER_METADATA,
         target.prototype,
       ) || {};
-    controllerMetadata[target.name] = controllerMetadata[target.name] || {};
+
+    if (!controllerMetadata[target.name]) {
+      controllerMetadata[target.name] = {} as ISingleControllerMetadata;
+    }
+
     controllerMetadata[target.name].baseRoute = baseRoute;
+
     Reflect.defineMetadata(
       AppMetadataKeys.CONTROLLER_METADATA,
       controllerMetadata,
       target.prototype,
     );
+
     return injectable()(target);
   };
 }

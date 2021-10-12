@@ -1,5 +1,3 @@
-// More info in https://www.restapitutorial.com/httpstatuscodes.html
-
 export enum HttpStatus {
   OK = 200,
   CREATED = 201,

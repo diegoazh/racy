@@ -1,6 +1,8 @@
+import { generalOnErrorMiddleware } from '../middleware/general-on-error.middleware';
+import { AzureMiddleware } from '@racy/azure-middleware';
 import { Container } from 'inversify';
 import { camelCase, kebabCase } from 'lodash';
-import { AppMetadataKeys } from '../constants/app-metadata-keys.constant';
+import { AppMetadataKeys } from '../constants/metadata-keys.constant';
 import { InjectableType } from '../constants/injectable-type.constant';
 import { AppModuleDecoratorException } from '../exceptions/app-module-decorator.exception';
 import { AppProviderException } from '../exceptions/app-provider.exception';
@@ -14,7 +16,6 @@ import {
   IHandlersMetadata,
   IModuleDecoratorOptions,
 } from '../interfaces/module-decorator-options.interface';
-// import appInsights from 'applicationinsights';
 
 /**
  * Module decorator factory
@@ -159,8 +160,6 @@ function createMainModuleDefinition(
   const mainContainer = new Container();
   const moduleContainers: Container[] = [];
 
-  // appInsights.setup().start();
-
   imports.forEach((module) => {
     if (Reflect.getMetadata(AppMetadataKeys.IS_MODULE, module)) {
       const containerModule =
@@ -247,7 +246,7 @@ function createMainModuleDefinition(
                   );
                 }
 
-                // const allMiddleware = getAllMiddleware(owner, methodName);
+                const allMiddleware = getAllMiddleware(owner, methodName);
 
                 const handler = inversifyServerlessHelper.mapMethodToHandler(
                   owner as new (...args: any[]) => any,
@@ -255,13 +254,19 @@ function createMainModuleDefinition(
                 );
 
                 // TODO: generate the base middleware
-                // const handlerWitMiddleware = BaseMiddleware(handler);
+                const handlerWitMiddleware = new AzureMiddleware(
+                  handler,
+                );
+                handlerWitMiddleware.use(generalOnErrorMiddleware());
 
-                // for (let index = 0; index < allMiddleware.length; index += 1) {
-                //   handlerWitMiddleware.use(allMiddleware[index]());
-                // }
+                for (let index = 0; index < allMiddleware.length; index += 1) {
+                  handlerWitMiddleware.use(
+                    allMiddleware[index](owner, methodName),
+                  );
+                }
 
-                allHandlers[finalHandlerName as string] = handler; // handlerWitMiddleware;
+                allHandlers[finalHandlerName as string] =
+                  handlerWitMiddleware.listen(); // handlerWitMiddleware;
               },
             );
           }
@@ -289,7 +294,7 @@ function createMainModuleDefinition(
  * @returns Function[]
  */
 // @ts-ignore
-function getAllMiddleware( // eslint-disable-line @typescript-eslint/no-unused-vars -- temporary
+function getAllMiddleware(
   owner: Function,
   methodName: string | symbol,
 ): Function[] {
