@@ -1,6 +1,6 @@
 {
   "name": "@racy/azure",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "racy implementation for azure",
   "main": "dist/index.js",
   "files": [
@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@azure/functions": "^1.2.3",
-    "@racy/azure-middleware": "^1.1.5",
+    "@racy/azure-middleware": "^1.1.6",
     "@serverless/typescript": "^2.59.0",
     "@types/azure-function-log-intercept": "^1.0.0",
     "@types/config": "^0.0.39",
