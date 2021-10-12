@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/diegoazh/racy/compare/@racy/azure@1.2.0...@racy/azure@1.2.2) (2021-10-12)
+
+
+### Bug Fixes
+
+* **azure:** update dependencies ([e3b007c](https://github.com/diegoazh/racy/commit/e3b007cbbd40f853fac94c7bc197e1f574b55ffb))
+
+
+
+
+
 ## [1.2.1](https://github.com/diegoazh/racy/compare/@racy/azure@1.2.0...@racy/azure@1.2.1) (2021-10-12)
 
 **Note:** Version bump only for package @racy/azure

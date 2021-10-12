@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/diegoazh/racy/compare/@racy/azure-middleware@1.1.3...@racy/azure-middleware@1.1.5) (2021-10-12)
+
+
+### Bug Fixes
+
+* **azure-middleware:** update release script and package.json definition ([27de5f4](https://github.com/diegoazh/racy/commit/27de5f4454fc8b0558dee66ca6eb3ad5436fd2da))
+
+
+
+
+
 ## [1.1.4](https://github.com/diegoazh/racy/compare/@racy/azure-middleware@1.1.3...@racy/azure-middleware@1.1.4) (2021-10-12)
 
 **Note:** Version bump only for package @racy/azure-middleware
