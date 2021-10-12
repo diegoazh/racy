@@ -1,6 +1,6 @@
 {
   "name": "@racy/azure",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "racy implementation for azure",
   "main": "index.js",
   "scripts": {
