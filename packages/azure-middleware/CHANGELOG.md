@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.8](https://github.com/diegoazh/racy/compare/@racy/azure-middleware@1.1.7...@racy/azure-middleware@1.1.8) (2021-10-12)
+
+
+### Bug Fixes
+
+* **azure-middleware:** add index.ts to types folder ([2249b60](https://github.com/diegoazh/racy/commit/2249b604b900bc083740b596177e8a6a64ceaf98))
+
+
+
+
+
 ## [1.1.7](https://github.com/diegoazh/racy/compare/@racy/azure-middleware@1.1.6...@racy/azure-middleware@1.1.7) (2021-10-12)
 
 **Note:** Version bump only for package @racy/azure-middleware
