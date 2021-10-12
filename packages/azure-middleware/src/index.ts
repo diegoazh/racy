@@ -5,7 +5,7 @@ import {
   MiddlewareConfiguration,
   ReqCtx,
   RunCtx,
-} from './types/azure-middleware.type';
+} from './types';
 
 export class AzureMiddleware {
   private before: AzureMiddlewareHandler[] = [];
