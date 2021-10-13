@@ -1,6 +1,6 @@
 {
   "name": "@racy/azure-middleware",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "racy implementation for azure middleware inspired on Middy",
   "main": "index.js",
   "types": "index.d.ts",
