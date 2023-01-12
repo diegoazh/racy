@@ -32,7 +32,7 @@
     "@types/validator": "^13.7.7",
     "azure-function-log-intercept": "^1.1.0",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "inversify": "^6.0.1",
     "lodash": "^4.17.21",
     "qs": "^6.11.0",
